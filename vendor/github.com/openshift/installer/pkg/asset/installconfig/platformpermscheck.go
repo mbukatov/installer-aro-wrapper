@@ -10,11 +10,11 @@ import (
 	awsconfig "github.com/openshift/installer/pkg/asset/installconfig/aws"
 	gcpconfig "github.com/openshift/installer/pkg/asset/installconfig/gcp"
 	powervsconfig "github.com/openshift/installer/pkg/asset/installconfig/powervs"
-
 	"github.com/openshift/installer/pkg/types/alibabacloud"
 	"github.com/openshift/installer/pkg/types/aws"
 	"github.com/openshift/installer/pkg/types/azure"
 	"github.com/openshift/installer/pkg/types/baremetal"
+	"github.com/openshift/installer/pkg/types/external"
 	"github.com/openshift/installer/pkg/types/gcp"
 	"github.com/openshift/installer/pkg/types/ibmcloud"
 	"github.com/openshift/installer/pkg/types/libvirt"
@@ -56,9 +56,14 @@ func (a *PlatformPermsCheck) Generate(dependencies asset.Parents) error {
 	case aws.Name:
 		permissionGroups := []awsconfig.PermissionGroup{awsconfig.PermissionCreateBase}
 		usingExistingVPC := len(ic.Config.AWS.Subnets) != 0
+		usingExistingPrivateZone := len(ic.Config.AWS.HostedZone) != 0
 
 		if !usingExistingVPC {
 			permissionGroups = append(permissionGroups, awsconfig.PermissionCreateNetworking)
+		}
+
+		if !usingExistingPrivateZone {
+			permissionGroups = append(permissionGroups, awsconfig.PermissionCreateHostedZone)
 		}
 
 		// Add delete permissions for non-C2S installs.
@@ -68,6 +73,9 @@ func (a *PlatformPermsCheck) Generate(dependencies asset.Parents) error {
 				permissionGroups = append(permissionGroups, awsconfig.PermissionDeleteSharedNetworking)
 			} else {
 				permissionGroups = append(permissionGroups, awsconfig.PermissionDeleteNetworking)
+			}
+			if !usingExistingPrivateZone {
+				permissionGroups = append(permissionGroups, awsconfig.PermissionDeleteHostedZone)
 			}
 		}
 
@@ -92,7 +100,7 @@ func (a *PlatformPermsCheck) Generate(dependencies asset.Parents) error {
 	case ibmcloud.Name:
 		// TODO: IBM[#90]: platformpermscheck
 	case powervs.Name:
-		bxCli, err := powervsconfig.NewBxClient()
+		bxCli, err := powervsconfig.NewBxClient(false)
 		if err != nil {
 			return err
 		}
@@ -100,7 +108,7 @@ func (a *PlatformPermsCheck) Generate(dependencies asset.Parents) error {
 		if err != nil {
 			return err
 		}
-	case azure.Name, baremetal.Name, libvirt.Name, none.Name, openstack.Name, ovirt.Name, vsphere.Name, alibabacloud.Name, nutanix.Name:
+	case azure.Name, baremetal.Name, libvirt.Name, external.Name, none.Name, openstack.Name, ovirt.Name, vsphere.Name, alibabacloud.Name, nutanix.Name:
 		// no permissions to check
 	default:
 		err = fmt.Errorf("unknown platform type %q", platform)

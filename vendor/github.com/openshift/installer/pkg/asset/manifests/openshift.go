@@ -3,14 +3,16 @@ package manifests
 import (
 	"context"
 	"encoding/base64"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 
-	"github.com/ghodss/yaml"
 	"github.com/gophercloud/utils/openstack/clientconfig"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
+	"k8s.io/apimachinery/pkg/util/sets"
+	"sigs.k8s.io/yaml"
 
 	"github.com/openshift/installer/pkg/asset"
 	"github.com/openshift/installer/pkg/asset/installconfig"
@@ -143,7 +145,7 @@ func (o *Openshift) Generate(dependencies asset.Parents) error {
 		}
 		cloudCreds = cloudCredsSecretData{
 			IBMCloud: &IBMCloudCredsSecretData{
-				Base64encodeAPIKey: base64.StdEncoding.EncodeToString([]byte(client.APIKey)),
+				Base64encodeAPIKey: base64.StdEncoding.EncodeToString([]byte(client.GetAPIKey())),
 			},
 		}
 	case openstacktypes.Name:
@@ -157,6 +159,16 @@ func (o *Openshift) Generate(dependencies asset.Parents) error {
 		// We need to replace the local cacert path with one that is used in OpenShift
 		if cloud.CACertFile != "" {
 			cloud.CACertFile = "/etc/kubernetes/static-pod-resources/configmaps/cloud-config/ca-bundle.pem"
+		}
+
+		// Application credentials are easily rotated in the event of a leak and should be preferred. Encourage their use.
+		authTypes := sets.New(clientconfig.AuthPassword, clientconfig.AuthV2Password, clientconfig.AuthV3Password)
+		if cloud.AuthInfo != nil && authTypes.Has(cloud.AuthType) {
+			logrus.Warnf(
+				"clouds.yaml file is using %q type auth. Consider using the %q auth type instead to rotate credentials more easily.",
+				cloud.AuthType,
+				clientconfig.AuthV3ApplicationCredential,
+			)
 		}
 
 		clouds := make(map[string]map[string]*clientconfig.Cloud)
@@ -184,24 +196,16 @@ func (o *Openshift) Generate(dependencies asset.Parents) error {
 		}
 	case vspheretypes.Name:
 		vsphereCredList := make([]*VSphereCredsSecretData, 0)
-		if len(installConfig.Config.VSphere.VCenters) > 0 {
-			for _, vCenter := range installConfig.Config.VSphere.VCenters {
-				vsphereCred := VSphereCredsSecretData{
-					VCenter:              vCenter.Server,
-					Base64encodeUsername: base64.StdEncoding.EncodeToString([]byte(vCenter.Username)),
-					Base64encodePassword: base64.StdEncoding.EncodeToString([]byte(vCenter.Password)),
-				}
-				vsphereCredList = append(vsphereCredList, &vsphereCred)
-			}
-		} else {
-			vCenter := installConfig.Config.VSphere
+
+		for _, vCenter := range installConfig.Config.VSphere.VCenters {
 			vsphereCred := VSphereCredsSecretData{
-				VCenter:              vCenter.VCenter,
+				VCenter:              vCenter.Server,
 				Base64encodeUsername: base64.StdEncoding.EncodeToString([]byte(vCenter.Username)),
 				Base64encodePassword: base64.StdEncoding.EncodeToString([]byte(vCenter.Password)),
 			}
 			vsphereCredList = append(vsphereCredList, &vsphereCred)
 		}
+
 		cloudCreds = cloudCredsSecretData{
 			VSphere: &vsphereCredList,
 		}
@@ -212,7 +216,7 @@ func (o *Openshift) Generate(dependencies asset.Parents) error {
 		}
 
 		if len(conf.CABundle) == 0 && len(conf.CAFile) > 0 {
-			content, err := ioutil.ReadFile(conf.CAFile)
+			content, err := os.ReadFile(conf.CAFile)
 			if err != nil {
 				return errors.Wrapf(err, "failed to read the cert file: %s", conf.CAFile)
 			}

@@ -25,6 +25,9 @@
 # we also must take care of replacing modules such as sigs.k8s.io/cluster-api-provider-azure
 # with github.com/openshift/cluster-api-provider-azure (just an example, there are more).
 
+RELEASE=release-4.14
+GO_VERSION=1.20
+
 for x in vendor/github.com/openshift/*; do
 	case $x in
 		# Review the list of special cases on each release.
@@ -54,19 +57,27 @@ for x in vendor/github.com/openshift/*; do
 		vendor/github.com/openshift/custom-resource-status)
 			;;
 
+		vendor/github.com/openshift/cluster-api | \
+		vendor/github.com/openshift/cluster-api-provider-ibmcloud)
+	    	;;
+
 		*)
-			go mod edit -replace ${x##vendor/}=$(go list -mod=mod -m ${x##vendor/}@release-4.12 | sed -e 's/ /@/')
+			go mod edit -replace ${x##vendor/}=$(go list -mod=mod -m ${x##vendor/}@release-4.14 | sed -e 's/ /@/')
 			;;
 	esac
 done
 
-for x in aws azure openstack; do
-	go mod edit -replace sigs.k8s.io/cluster-api-provider-$x=$(go list -mod=mod -m github.com/openshift/cluster-api-provider-$x@release-4.12 | sed -e 's/ /@/')
+for x in aws/v2 azure openstack; do
+	go mod edit -replace sigs.k8s.io/cluster-api-provider-$x=$(go list -mod=mod -m github.com/openshift/cluster-api-provider-$x@$RELEASE | sed -e 's/ /@/')
 done
 
-go mod edit -replace github.com/openshift/installer=$(go list -mod=mod -m github.com/jewzaam/installer-aro@release-4.12-azure | sed -e 's/ /@/')
+for x in baremetal-operator baremetal-operator/apis baremetal-operator/pkg/hardwareutils; do
+  go mod edit -replace github.com/metal3-io/$x=$(go list -mod=mod -m github.com/openshift/$x@$RELEASE | sed -e 's/ /@/')
+done
+
+go mod edit -replace github.com/openshift/installer=$(go list -mod=mod -m github.com/bitoku/installer@$RELEASE-azure | sed -e 's/ /@/')
 
 go get -u ./...
 
-go mod tidy -compat=1.19
+go mod tidy -compat=1.20
 go mod vendor

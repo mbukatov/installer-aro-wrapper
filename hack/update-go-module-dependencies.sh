@@ -77,7 +77,9 @@ done
 
 go mod edit -replace github.com/openshift/installer=$(go list -mod=mod -m github.com/bitoku/installer@$RELEASE-azure | sed -e 's/ /@/')
 
-go get -u ./...
+# TODO(atokubi): It is not good to include upgrade in the automation because it may break the build.
+# go get -u ./...
+go get ./...
 
 go mod tidy -compat=1.20
 go mod vendor

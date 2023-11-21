@@ -40,12 +40,6 @@ for x in vendor/github.com/openshift/*; do
 		vendor/github.com/openshift/installer)
 			;;
 
-		# Inconsistent imports: some of our dependencies import it as github.com/metal3-io/cluster-api-provider-baremetal
-		# but in some places directly from the openshift fork.
-		# Replace github.com/metal3-io/cluster-api-provider-baremetal with an openshift fork in go.mod
-		vendor/github.com/openshift/cluster-api-provider-baremetal)
-			;;
-
 		# It is only used indirectly and intermediate dependencies pin to different incompatible commits.
 		# We force a specific commit here to make all dependencies happy.
 		vendor/github.com/openshift/cloud-credential-operator)
@@ -57,29 +51,29 @@ for x in vendor/github.com/openshift/*; do
 		vendor/github.com/openshift/custom-resource-status)
 			;;
 
-		vendor/github.com/openshift/cluster-api | \
+		vendor/github.com/openshift/cluster-api |\
 		vendor/github.com/openshift/cluster-api-provider-ibmcloud)
 	    	;;
 
 		*)
-			go mod edit -replace ${x##vendor/}=$(go list -mod=mod -m ${x##vendor/}@release-4.14 | sed -e 's/ /@/')
+			go mod edit -replace "${x##vendor/}"="$(go list -mod=mod -m ${x##vendor/}@release-4.14 | sed -e 's/ /@/')"
 			;;
 	esac
 done
 
 for x in aws/v2 azure openstack; do
-	go mod edit -replace sigs.k8s.io/cluster-api-provider-$x=$(go list -mod=mod -m github.com/openshift/cluster-api-provider-$x@$RELEASE | sed -e 's/ /@/')
+	go mod edit -replace sigs.k8s.io/cluster-api-provider-$x="$(go list -mod=mod -m github.com/openshift/cluster-api-provider-$x@$RELEASE | sed -e 's/ /@/')"
 done
 
-for x in baremetal-operator baremetal-operator/apis baremetal-operator/pkg/hardwareutils; do
-  go mod edit -replace github.com/metal3-io/$x=$(go list -mod=mod -m github.com/openshift/$x@$RELEASE | sed -e 's/ /@/')
+for x in baremetal-operator baremetal-operator/apis baremetal-operator/pkg/hardwareutils cluster-api-provider-baremetal cluster-api-provider-metal3 cluster-api-provider-metal3/api; do
+  go mod edit -replace github.com/metal3-io/$x="$(go list -mod=mod -m github.com/openshift/$x@$RELEASE | sed -e 's/ /@/')"
 done
 
-go mod edit -replace github.com/openshift/installer=$(go list -mod=mod -m github.com/bitoku/installer@$RELEASE-azure | sed -e 's/ /@/')
+go mod edit -replace github.com/openshift/installer="$(go list -mod=mod -m github.com/bitoku/installer@$RELEASE-azure | sed -e 's/ /@/')"
 
 # TODO(atokubi): It is not good to include upgrade in the automation because it may break the build.
 # go get -u ./...
 go get ./...
 
-go mod tidy -compat=1.20
+go mod tidy -compat=$GO_VERSION
 go mod vendor

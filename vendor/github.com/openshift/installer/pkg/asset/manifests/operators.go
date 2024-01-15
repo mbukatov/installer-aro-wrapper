@@ -170,7 +170,7 @@ func (m *Manifests) generateBootKubeManifests(dependencies asset.Parents) []*ass
 		IsFCOS:                        installConfig.Config.IsFCOS(),
 		IsSCOS:                        installConfig.Config.IsSCOS(),
 		IsOKD:                         installConfig.Config.IsOKD(),
-		AROWorkerRegistries:           aroWorkerRegistries(installConfig.Config.DeprecatedImageContentSources),
+		AROWorkerRegistries:           aroWorkerRegistries(installConfig.Config.ImageDigestSources),
 		AROIngressIP:                  aroDNSConfig.IngressIP,
 		AROIngressInternal:            installConfig.Config.Publish == types.InternalPublishingStrategy,
 		AROImageRegistryHTTPSecret:    aroImageRegistryConfig.HTTPSecret,
@@ -300,15 +300,15 @@ func indent(indention int, v string) string {
 	return strings.Replace(v, "\n", newline, -1)
 }
 
-func aroWorkerRegistries(icss []types.ImageContentSource) string {
+func aroWorkerRegistries(idss []types.ImageDigestSource) string {
 	b := &bytes.Buffer{}
 
 	fmt.Fprintf(b, "unqualified-search-registries = [\"registry.access.redhat.com\", \"docker.io\"]\n")
 
-	for _, ics := range icss {
-		fmt.Fprintf(b, "\n[[registry]]\n  prefix = \"\"\n  location = \"%s\"\n  mirror-by-digest-only = true\n", ics.Source)
+	for _, ids := range idss {
+		fmt.Fprintf(b, "\n[[registry]]\n  prefix = \"\"\n  location = \"%s\"\n  mirror-by-digest-only = true\n", ids.Source)
 
-		for _, mirror := range ics.Mirrors {
+		for _, mirror := range ids.Mirrors {
 			fmt.Fprintf(b, "\n  [[registry.mirror]]\n    location = \"%s\"\n", mirror)
 		}
 	}

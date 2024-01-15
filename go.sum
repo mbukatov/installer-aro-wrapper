@@ -752,8 +752,6 @@ github.com/beorn7/perks v1.0.0/go.mod h1:KWe93zE9D1o94FZ5RNwFwVgaQK1VOXiVxmqh+Ce
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
 github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6rlkpw=
 github.com/bgentry/speakeasy v0.1.0/go.mod h1:+zsyZBPWlz7T6j88CTgSN5bM796AkVf0kBD4zp0CCIs=
-github.com/bitoku/installer v0.0.0-20231115050734-1b61ec7d6a77 h1:KjuKTRQaN3ZIKz2RJbCaVSEq/ux4BCKeNGY1QLUImW8=
-github.com/bitoku/installer v0.0.0-20231115050734-1b61ec7d6a77/go.mod h1:uhb0xji4yCB2FdFwADWxDiuiKLKTKxxGNap4Mb8sAVs=
 github.com/bketelsen/crypt v0.0.3-0.20200106085610-5cbc8cc4026c/go.mod h1:MKsuJmJgSg28kpZDP6UIiPt0e0Oz0kqKNGyRaWEPv84=
 github.com/bkielbasa/cyclop v1.2.1 h1:AeF71HZDob1P2/pRm1so9cd1alZnrpyc4q2uP2l0gJY=
 github.com/bkielbasa/cyclop v1.2.1/go.mod h1:K/dT/M0FPAiYjBgQGau7tz+3TMh4FWAEqlMhzFWCrgM=
@@ -1465,6 +1463,8 @@ github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0 h1:jWpvCLoY8Z/e3VKvls
 github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0/go.mod h1:QUyp042oQthUoa9bqDv0ER0wrtXnBruoNd7aNjkbP+k=
 github.com/mbilski/exhaustivestruct v1.2.0 h1:wCBmUnSYufAHO6J4AVWY6ff+oxWxsVFrwgOdMUQePUo=
 github.com/mbilski/exhaustivestruct v1.2.0/go.mod h1:OeTBVxQWoEmB2J2JCHmXWPJ0aksxSUOUy+nvtVEfzXc=
+github.com/mbukatov/installer-aro v0.0.0-20240109185349-cec891abd67c h1:9N5C1q9SiYL41Jn0UEyBHQhpYaGxOlVDOwZuP3+1Gok=
+github.com/mbukatov/installer-aro v0.0.0-20240109185349-cec891abd67c/go.mod h1:uhb0xji4yCB2FdFwADWxDiuiKLKTKxxGNap4Mb8sAVs=
 github.com/mediocregopher/radix/v3 v3.4.2/go.mod h1:8FL3F6UQRXHXIBSPUs5h0RybMF8i4n7wVopoX3x7Bv8=
 github.com/mgechev/revive v1.3.2 h1:Wb8NQKBaALBJ3xrrj4zpwJwqwNA6nDpyJSEQWcCka6U=
 github.com/mgechev/revive v1.3.2/go.mod h1:UCLtc7o5vg5aXCwdUTU1kEBQ1v+YXPAkYDIDXbrs5I0=
@@ -1596,10 +1596,10 @@ github.com/openshift/assisted-service/api v0.0.0-20230831114549-1922eda29cf8 h1:
 github.com/openshift/assisted-service/api v0.0.0-20230831114549-1922eda29cf8/go.mod h1:PmMnbVno5ocinfELDdKOaatvT5ucJLrau+fjHQNeCiY=
 github.com/openshift/assisted-service/models v0.0.0-20230831114549-1922eda29cf8 h1:lQO/vwmLX4kSmZitusnqdq9KbuW402DWkcmR0CJfgBI=
 github.com/openshift/assisted-service/models v0.0.0-20230831114549-1922eda29cf8/go.mod h1:ImkG1jQgM72erhLaZtWqEn0g0Y8AYUOxLR/HgvlPi2Y=
-github.com/openshift/baremetal-operator/apis v0.0.0-20231019133159-8643f32fea3e h1:wxkrIEx1lA6vdGAuBAgXmOVDJ+vX+4nhc7Cgu2jszSg=
-github.com/openshift/baremetal-operator/apis v0.0.0-20231019133159-8643f32fea3e/go.mod h1:124MbDDT1AWBpBNcnAPII2H+6p1Q7MIBF67egVtjYbc=
-github.com/openshift/baremetal-operator/pkg/hardwareutils v0.0.0-20231019133159-8643f32fea3e h1:IHlr/057j/i3LkyaI4lLPYixNXMBMPaaJAe9/GPYnZU=
-github.com/openshift/baremetal-operator/pkg/hardwareutils v0.0.0-20231019133159-8643f32fea3e/go.mod h1:Dck2B6BQX3L+AE2Xe+LzrVPP1A/zQkhCU/aSVbsi7Nw=
+github.com/openshift/baremetal-operator/apis v0.0.0-20231211103544-9cd5c076afbc h1:RNH3znGVUq65U9brMydoOcfu7oK7/Y4YcVcrbvwgWG0=
+github.com/openshift/baremetal-operator/apis v0.0.0-20231211103544-9cd5c076afbc/go.mod h1:124MbDDT1AWBpBNcnAPII2H+6p1Q7MIBF67egVtjYbc=
+github.com/openshift/baremetal-operator/pkg/hardwareutils v0.0.0-20231211103544-9cd5c076afbc h1:HzwdOPJLIhgwT5OnvPqw0wNz+b1AOWTEifs7VlT2Kvk=
+github.com/openshift/baremetal-operator/pkg/hardwareutils v0.0.0-20231211103544-9cd5c076afbc/go.mod h1:Dck2B6BQX3L+AE2Xe+LzrVPP1A/zQkhCU/aSVbsi7Nw=
 github.com/openshift/client-go v0.0.0-20230807132528-be5346fb33cb h1:laYRaVm1tMdTLkZERvj9muJDvUtYo2HjRoo4Xu55EfM=
 github.com/openshift/client-go v0.0.0-20230807132528-be5346fb33cb/go.mod h1:eCLby3OeidJ9+8GcvvGROU6hsCv2XAPQw8EO7d8NbQA=
 github.com/openshift/cloud-credential-operator v0.0.0-20200316201045-d10080b52c9e h1:2gyl9UVyjHSWzdS56KUXxQwIhENbq2x2olqoMQSA/C8=
@@ -1618,8 +1618,8 @@ github.com/openshift/hive/apis v0.0.0-20220719141355-c63c9b0281d8 h1:7e4sMDIstjE
 github.com/openshift/hive/apis v0.0.0-20220719141355-c63c9b0281d8/go.mod h1:XWo9dsulk75E9xkfxS/GNpJrL5UHgn3wuSyPeO39NME=
 github.com/openshift/machine-api-provider-ibmcloud v0.0.0-20230627135745-c28b2232ab1c h1:M6Dz5vloFwB0irrha8h7CEVugrPAK1nqrsVNXcvqoYU=
 github.com/openshift/machine-api-provider-ibmcloud v0.0.0-20230627135745-c28b2232ab1c/go.mod h1:/vPV5egjVdqN446z3WSgE0i79H6Gj+Xx85zG/k/Vl7Y=
-github.com/openshift/machine-config-operator v0.0.1-0.20231120155809-a6cdd850c44f h1:tPXQgFaHSEHAGg0HnZac5ZOcD0l4g+UrYOqX77NZ24w=
-github.com/openshift/machine-config-operator v0.0.1-0.20231120155809-a6cdd850c44f/go.mod h1:RVXxGeaeKYcdekIFMn640nvX1jxl/B8orgVssAneCsA=
+github.com/openshift/machine-config-operator v0.0.1-0.20240111185711-d7450472821e h1:zP0xg6TSbTmURCf9+F577IW7sLMCUpasiyNBGZd7BLU=
+github.com/openshift/machine-config-operator v0.0.1-0.20240111185711-d7450472821e/go.mod h1:RVXxGeaeKYcdekIFMn640nvX1jxl/B8orgVssAneCsA=
 github.com/opentracing/opentracing-go v1.1.0/go.mod h1:UkNAQd3GIcIGf0SeVgPpRdFStlNbqXla1AfSYxPUl2o=
 github.com/opentracing/opentracing-go v1.2.1-0.20220228012449-10b1cf09e00b h1:FfH+VrHHk6Lxt9HdVS0PXzSXFyS2NbZKXv33FYPol0A=
 github.com/opentracing/opentracing-go v1.2.1-0.20220228012449-10b1cf09e00b/go.mod h1:AC62GU6hc0BrNm+9RK9VSiwa/EUe1bkIeFORAMcHvJU=
